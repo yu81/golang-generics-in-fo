@@ -1,0 +1,47 @@
+package main
+
+import (
+	"fmt"
+	"strconv"
+)
+
+type Box [T] struct {
+	v T
+}
+type A[T] []T
+
+type B [T, U] map[T]U
+type C [T, U] func (T) U
+
+type D [T] struct {
+	a T
+	b A[T]
+}
+
+func main(){
+	//////////////////////
+	// Generic Named Types
+	//////////////////////
+	box1 := Box[int]{v:123} // boxing int
+	fmt.Println(box1)
+
+	box2 := Box[string]{v:"gopher"} // boxing string
+	fmt.Println(box2)
+
+	var a A[int] // like List<int>
+	// a = make(A[int], 0, 2) //  A[T] cannot be used as a parameter of make.
+	a = append(a, 100)
+	a = append(a, 200)
+	fmt.Println(a)
+
+	b := make(B[string, int]) // like Dictionary<string, int>
+	b["foo"] = 1
+	b["bar"] = 2
+	fmt.Println(b)
+
+	cFunc := func(i int)string{return strconv.Itoa(i)}
+	_ = C[int, string](cFunc) // build passes.
+
+	d := D[int] {a:300, b:a}
+	fmt.Println(d)
+}
